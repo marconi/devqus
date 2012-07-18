@@ -1,7 +1,7 @@
 DevQus
 ============
 
-A simple Pyramid project that demonstrates the use of `Server-Side-Events (SSE) <http://en.wikipedia.org/wiki/Server-sent_events>`_.
+A simple `Pyramid <http://www.pylonsproject.org/>`_ project that demonstrates the use of `Server-Side-Events (SSE) <http://en.wikipedia.org/wiki/Server-sent_events>`_.
 Inspired by Jesse Panganiban's `Chattr <https://github.com/jpanganiban/chattr>`_ app.
 
 Getting Started
