@@ -1,0 +1,20 @@
+# standard
+*~
+*.pyc
+*.pyo
+*.mo
+*.log
+*.pid
+*.egg-info
+.coverage
+.DS_Store
+
+# local
+/local.cfg
+/local.ini
+
+# app
+/data/*
+*.db
+
+cstyle.css

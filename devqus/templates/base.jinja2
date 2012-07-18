@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{ _("DevQus") }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="{{ h.assets_url(request, '/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ h.scss(request, '/css/common.css') }}" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div class="container-fluid">
+
+      <div class="row-fluid">
+        <div id="sidebar" class="span2">
+          <h1>{{ _("DevQus") }}</h1>
+          {% block sidebar %}
+          {% endblock sidebar %}
+        </div>
+        <div id="content" class="span10">
+          {% block content %}
+          {% endblock content %}
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ h.assets_url(request, '/js/jquery.min.js') }}"></script>
+    <script src="{{ h.assets_url(request, '/js/jquery.scrollTo.js') }}"></script>
+    <script src="{{ h.assets_url(request, '/js/bootstrap.min.js') }}"></script>
+    <script src="{{ h.assets_url(request, '/js/common.js') }}"></script>
+
+  </body>
+</html>

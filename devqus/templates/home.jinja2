@@ -1,0 +1,33 @@
+{% extends "base.jinja2" %}
+
+{% block content %}
+<div id="home">
+  <form>
+
+    <div class="fluid-row">
+      <div class="span12">
+        <div id="message-stream">
+        </div>
+      </div>
+    </div>
+
+    <div class="fluid-row">
+      <div class="span12">
+        <div id="message-input">
+          <table>
+            <tr>
+              <td>
+                <input id="nick" type="text" class="input-xlarge" placeholder="Anonymous">
+              </td>
+              <td>
+                <input id="msg-input" type="text" class="input-xlarge">
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+{% endblock content %}

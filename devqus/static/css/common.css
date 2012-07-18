@@ -1,0 +1,76 @@
+body {
+    background: url("/static/img/bg.png") repeat top left;
+    padding-top: 20px;
+}
+
+#content {
+    background: #fff;
+    height: 400px;
+    box-shadow: 0 0 7px 4px #282827;
+
+    #home {
+        form,
+        input {
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            td:first-child {
+                width: 100px;
+            }
+        }
+        #nick {
+            margin-right: 20px;
+            width: 100px;
+        }
+        #msg-input {
+            width: 99%;
+        }
+        #message-input {
+            padding: 20px;
+        }
+        #message-stream {
+            border: 1px solid #ccc;
+            margin: 20px 20px 0 20px;
+            height: 290px;
+            border-radius: 3px;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+        .message {
+            overflow: hidden;
+            margin-bottom: 5px;
+            .name {
+                float: left;
+                display: inline-block;
+                color: #08C;
+                margin-right: 5px;
+            }
+            p {
+                margin: 0;
+                display: inline;
+            }
+        }
+    }
+
+}
+
+#sidebar {
+    color: #fff;
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        text-shadow: #282827 2px 2px 2px;
+    }
+    ul {
+        list-style: none;
+        height: 330px;
+        overflow-y: scroll;
+        margin: 0 0 0 25px;
+        li {
+            font-size: 14px;
+            font-weight: bold;
+            color: #3cc101;
+        }
+    }
+}
