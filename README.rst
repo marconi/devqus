@@ -1,7 +1,7 @@
 DevQus
 ============
 
-A simple Pyramid project that demonstrates whe use of Server-Side-Events (SSE)<http://en.wikipedia.org/wiki/Server-sent_events>.
+A simple Pyramid project that demonstrates whe use of `Server-Side-Events (SSE) <http://en.wikipedia.org/wiki/Server-sent_events>`_ .
 
 Getting Started
 ---------------
