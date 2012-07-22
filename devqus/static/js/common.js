@@ -1,5 +1,7 @@
 $(function() {
 
+    var WEB_SOCKET_SWF_LOCATION = '/static/js/socketio/WebSocketMain.swf';
+
     $("#message-stream").scrollTo('100%', 800);
     $("#msg-input").keypress(function(e) {
         if (e.keyCode === 13) {

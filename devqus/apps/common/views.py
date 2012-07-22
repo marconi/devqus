@@ -1,12 +1,11 @@
 import logging
-import transaction
 import simplejson as json
 from jinja2.utils import escape
 
 from pyramid.view import view_config
 from pyramid.response import Response
 
-from .models import DBSession, Message
+from .models import Message
 
 
 logger = logging.getLogger('devqus')
@@ -24,9 +23,8 @@ def stream(request):
 
     body = ''
     last_msg_id = request.headers.get('Last-Event-ID', 0)
-    messages = DBSession.query(
-        Message).filter(Message.id > last_msg_id).order_by(Message.created.asc())
-    if not messages.count() == 0:
+    messages = Message.objects.zfilter(mid__gt=last_msg_id).order('created')
+    if not len(messages) == 0:
         response_messages = []
         for message in messages:
             msg = ["id:%s" % message.id,
@@ -42,6 +40,10 @@ def stream(request):
 def post(request):
     message = Message(body=escape(request.POST.get('body', '')),
                       author=escape(request.POST.get('author', '')))
-    with transaction.manager:
-        DBSession.add(message)
-    return Response(body=json.dumps({}))
+    if message.is_valid():
+        message.save()
+        body = {'status': 'SUCCESS'}
+    else:
+        body = dict(message.errors)
+        body.update({'status': 'FAILED'})
+    return Response(body=json.dumps(body))
