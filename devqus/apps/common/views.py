@@ -1,6 +1,10 @@
+import redis
 import logging
 import simplejson as json
 from jinja2.utils import escape
+from socketio.namespace import BaseNamespace
+from socketio import socketio_manage
+from socketio.mixins import BroadcastMixin
 
 from pyramid.view import view_config
 from pyramid.response import Response
@@ -47,3 +51,54 @@ def post(request):
         body = dict(message.errors)
         body.update({'status': 'FAILED'})
     return Response(body=json.dumps(body))
+
+
+class ChatNamespace(BaseNamespace, BroadcastMixin):
+
+    def __init__(self, *args, **kwargs):
+        super(ChatNamespace, self).__init__(*args, **kwargs)
+        self.online_key = 'online:users'
+        self.redis_db = redis.StrictRedis()
+
+    def _broadcast_online_users(self):
+        online_users = list(self.redis_db.smembers(self.online_key))
+        self.broadcast_event('online-users',
+                             json.dumps({'online_users': online_users}))
+
+    def recv_connect(self):
+        print "connected!"
+        sorted_users = self.redis_db.sort(self.online_key, desc=True)
+        if sorted_users:
+            online_users_count = 0
+            for user in sorted_users:
+                tmp = user.split('-')
+                if tmp:
+                    online_users_count = int(tmp[1])
+                    break
+        else:
+            online_users_count = 0
+        self.nick = 'Anonymous-%s' % str(online_users_count + 1)
+        self.redis_db.sadd(self.online_key, self.nick)
+        self.emit('nick', self.nick)
+        self._broadcast_online_users()
+
+    def recv_disconnect(self):
+        print "disconnected!"
+        super(ChatNamespace, self).disconnect(silent=True)
+        self.redis_db.srem(self.online_key, self.nick)
+        self._broadcast_online_users()
+
+    def on_change_nick(self, new_nick):
+        self.redis_db.srem(self.online_key, self.nick)
+        self.nick = new_nick
+        self.redis_db.sadd(self.online_key, self.nick)
+        print "new nick: %s" % self.nick
+        self._broadcast_online_users()
+
+
+@view_config(route_name='socketio', renderer='string')
+def socketio_service(request):
+    response = socketio_manage(
+        request.environ, {'/stream': ChatNamespace}, request=request)
+    logger.debug(response)
+    return ''

@@ -16,6 +16,7 @@ requires = [
     'pyScss==1.1.3',
     'simplejson==2.5.2',
     'redisco==0.1.4',
+    'gevent-socketio==0.3.5-rc2'
 ]
 
 setup(name='devqus',

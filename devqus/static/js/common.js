@@ -1,6 +1,30 @@
 $(function() {
 
-    var WEB_SOCKET_SWF_LOCATION = '/static/js/socketio/WebSocketMain.swf';
+    var WEB_SOCKET_SWF_LOCATION = '/static/js/socketio/WebSocketMain.swf',
+        socket = io.connect('/stream'),
+        nick = null;
+
+    socket.on('nick', function(newNick) {
+        nick = newNick;
+    });
+    socket.on('disconnect', function() {
+        console.log("disconnected!");
+    });
+    socket.on('online-users', function(data) {
+        data = JSON.parse(data);
+        console.log(data);
+        if (data.online_users.length > 0) {
+            $("#sidebar li").remove();
+            $.each(data.online_users, function() {
+                var li = document.createElement('li');
+                li.innerHTML = this;
+                $("#sidebar ul").append(li);
+            });
+        }
+    });
+    socket.on('error', function() {
+        console.log("error!");
+    });
 
     $("#message-stream").scrollTo('100%', 800);
     $("#msg-input").keypress(function(e) {
@@ -8,7 +32,11 @@ $(function() {
             var data = $(this).val().trim(),
                 author = $("#nick").val().trim();
 
-            author = (author !== "") ? author : "Anonymous";
+            author = (author !== "") ? author : nick;
+            if (author !== nick) {
+                nick = author;
+                socket.emit("change_nick", author);
+            }
 
             if (data !== "") {
                 $.ajax({
@@ -28,6 +56,7 @@ $(function() {
         }
     });
 
+    // listen for incoming messages from server
     if (window.EventSource) {
         var stream = new EventSource('/stream');
         stream.addEventListener('message', function(e) {

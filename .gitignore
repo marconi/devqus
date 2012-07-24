@@ -16,5 +16,6 @@
 # app
 /data/*
 *.db
+*.rdb
 
 cstyle.css
