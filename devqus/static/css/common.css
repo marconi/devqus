@@ -65,7 +65,7 @@ body {
     ul {
         list-style: none;
         height: 330px;
-        overflow-y: scroll;
+        overflow-y: auto;
         margin: 0 0 0 25px;
         li {
             font-size: 14px;

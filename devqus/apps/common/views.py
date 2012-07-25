@@ -28,8 +28,9 @@ def stream(request):
     body = ''
     last_msg_id = request.headers.get('Last-Event-ID', 0)
     messages = Message.objects.zfilter(mid__gt=last_msg_id).order('created')
-    if not len(messages) == 0:
+    try:
         response_messages = []
+        messages = messages[-2:]  # display only last 10 messages
         for message in messages:
             msg = ["id:%s" % message.id,
                    'data:{"body":"%s",' % message.body,
@@ -37,6 +38,8 @@ def stream(request):
                    'data:"author":"%s"}\n\n' % message.author]
             response_messages.append('\n'.join(msg))
         body = ''.join(response_messages)
+    except IndexError:
+        pass
     return Response(body=body, headers=headers)
 
 
@@ -66,7 +69,6 @@ class ChatNamespace(BaseNamespace, BroadcastMixin):
                              json.dumps({'online_users': online_users}))
 
     def recv_connect(self):
-        print "connected!"
         sorted_users = self.redis_db.sort(self.online_key, desc=True)
         if sorted_users:
             online_users_count = 0
@@ -83,7 +85,6 @@ class ChatNamespace(BaseNamespace, BroadcastMixin):
         self._broadcast_online_users()
 
     def recv_disconnect(self):
-        print "disconnected!"
         super(ChatNamespace, self).disconnect(silent=True)
         self.redis_db.srem(self.online_key, self.nick)
         self._broadcast_online_users()
@@ -92,7 +93,6 @@ class ChatNamespace(BaseNamespace, BroadcastMixin):
         self.redis_db.srem(self.online_key, self.nick)
         self.nick = new_nick
         self.redis_db.sadd(self.online_key, self.nick)
-        print "new nick: %s" % self.nick
         self._broadcast_online_users()
 
 
